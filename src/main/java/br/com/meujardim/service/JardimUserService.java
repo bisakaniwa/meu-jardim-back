@@ -5,13 +5,13 @@ import br.com.meujardim.exception.UniqueUseException;
 import br.com.meujardim.exception.UserNotFoundException;
 import br.com.meujardim.model.JardimUser;
 import br.com.meujardim.repository.JardimUserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNullElse;
 
 @Service
 public class JardimUserService {
@@ -21,19 +21,7 @@ public class JardimUserService {
         this.userRepository = userRepository;
     }
 
-    public List<JardimUser> listarTodosOsUsers() {
-        return userRepository.findAll();
-    }
-
-    public JardimUser encontrarUserPorId(long userId) {
-        Optional<JardimUser> procurarUser = userRepository.findById(userId);
-        if (procurarUser.isEmpty()) {
-            throw new UserNotFoundException("Usuário não encontrado");
-        } else {
-            return procurarUser.get();
-        }
-    }
-
+    @Transactional
     public JardimUser cadastrarUser(JardimUser user) {
         boolean userInvalido = userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
         if (userInvalido) {
@@ -56,16 +44,29 @@ public class JardimUserService {
         }
     }
 
-//    public JardimUser recuperaDados(LoginDTO dadosLogin, String identificacao) {
-//        JardimUser encontradoPorEmail = userRepository.findByEmail(identificacao);
-//        JardimUser encontradoPorUsername = userRepository.findByUsername(identificacao);
-//
-//        if (validaLogin(dadosLogin).equals("Email")) {
-//            return encontradoPorEmail;
-//        } else if (validaLogin(dadosLogin).equals("Username")) {
-//            return encontradoPorUsername;
-//        } else {
-//            throw new UserNotFoundException("Usuário não encontrado");
-//        }
-//    }
+    @Transactional
+    public JardimUser atualizaUser(JardimUser userAtualizado) {
+        Optional<JardimUser> userBuscado = userRepository.findById(userAtualizado.getId());
+        if (userBuscado.isEmpty()) {
+            throw new UserNotFoundException("Usuário não encontrado.");
+        } else {
+            JardimUser user = userBuscado.get();
+            user.setPrimeiroNome(requireNonNullElse(userAtualizado.getPrimeiroNome(), user.getPrimeiroNome()));
+            user.setUltimoNome(requireNonNullElse(userAtualizado.getUltimoNome(), user.getUltimoNome()));
+            user.setUsername(requireNonNullElse(userAtualizado.getUsername(), user.getUsername()));
+            user.setEmail(requireNonNullElse(userAtualizado.getEmail(), user.getEmail()));
+            user.setSenha(requireNonNullElse(userAtualizado.getSenha(), user.getSenha()));
+            return userRepository.save(user);
+        }
+    }
+
+    @Transactional
+    public void excluirConta(long userId) {
+        Optional<JardimUser> userParaExcluir = userRepository.findById(userId);
+        if (userParaExcluir.isEmpty()) {
+            throw new UserNotFoundException("Usuário não encontrado.");
+        } else {
+            userRepository.deleteById(userId);
+        }
+    }
 }

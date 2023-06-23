@@ -18,16 +18,6 @@ public class JardimUserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/{userId}")
-//    ResponseEntity<JardimUser> procurarUserPorId(@PathVariable long userId) {
-//        return ResponseEntity.ok(userService.encontrarUserPorId(userId));
-//    }
-
-//    @GetMapping("/{identificacao}")
-//    ResponseEntity<JardimUser> recuperaDadosUser(@PathVariable String identificacao, LoginDTO dadosLogin) {
-//     return ResponseEntity.ok(userService.recuperaDados(dadosLogin, identificacao));
-//    }
-
     @PostMapping
     ResponseEntity<JardimUser> cadastrarUser(@RequestBody @Valid JardimUser novoUser) {
         return new ResponseEntity<>(userService.cadastrarUser(novoUser), HttpStatus.CREATED);
@@ -36,5 +26,16 @@ public class JardimUserController {
     @PostMapping("/login")
     ResponseEntity<JardimUser> validaLogin(@RequestBody @Valid LoginDTO dadosLogin) {
         return new ResponseEntity<>(userService.validaLogin(dadosLogin), HttpStatus.OK);
+    }
+
+    @PutMapping("/atualizar")
+    ResponseEntity<JardimUser> atualizarUser(@RequestBody @Valid JardimUser userAtualizado) {
+        return new ResponseEntity<>(userService.atualizaUser(userAtualizado), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{userId}")
+    ResponseEntity<JardimUser> excluirConta(@PathVariable long userId) {
+        userService.excluirConta(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
