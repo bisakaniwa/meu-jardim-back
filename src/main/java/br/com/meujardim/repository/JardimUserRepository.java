@@ -6,9 +6,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JardimUserRepository extends JpaRepository<JardimUser, Long> {
+
     JardimUser findByEmail(String email);
+
     JardimUser findByUsername(String username);
+
     boolean existsByUsernameOrEmail(String username, String email);
+
     JardimUser findByUsernameAndSenha(String username, String senha);
+
     JardimUser findByEmailAndSenha(String email, String senha);
 }

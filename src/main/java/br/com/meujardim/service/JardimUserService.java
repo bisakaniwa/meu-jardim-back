@@ -21,6 +21,15 @@ public class JardimUserService {
         this.userRepository = userRepository;
     }
 
+    public JardimUser buscarPorId(long userId) {
+        Optional<JardimUser> busca = userRepository.findById(userId);
+        if (busca.isEmpty()) {
+            throw new UserNotFoundException("Usuário não encontrado.");
+        } else {
+            return busca.get();
+        }
+    }
+
     @Transactional
     public JardimUser cadastrarUser(JardimUser user) {
         boolean userInvalido = userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
@@ -46,7 +55,7 @@ public class JardimUserService {
 
     @Transactional
     public JardimUser atualizaUser(JardimUser userAtualizado) {
-        Optional<JardimUser> userBuscado = userRepository.findById(userAtualizado.getId());
+        Optional<JardimUser> userBuscado = userRepository.findById(userAtualizado.getUserId());
         if (userBuscado.isEmpty()) {
             throw new UserNotFoundException("Usuário não encontrado.");
         } else {

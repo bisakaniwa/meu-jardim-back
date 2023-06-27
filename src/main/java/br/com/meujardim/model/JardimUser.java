@@ -3,15 +3,17 @@ package br.com.meujardim.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import org.hibernate.validator.constraints.UniqueElements;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class JardimUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @Column(name = "user_id")
+    private long userId;
 
     @NotBlank
     @Column(name = "primeiro_nome")
@@ -32,11 +34,8 @@ public class JardimUser {
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
-    public JardimUser() {
-    }
-
-    public JardimUser(long id, String primeiroNome, String ultimoNome, String username, String email, String senha, Boolean isAdmin) {
-        this.id = id;
+    public JardimUser(long userId, String primeiroNome, String ultimoNome, String username, String email, String senha, Boolean isAdmin) {
+        this.userId = userId;
         this.primeiroNome = primeiroNome;
         this.ultimoNome = ultimoNome;
         this.username = username;
