@@ -26,18 +26,18 @@ public class PlantaController {
     }
 
     @PostMapping
-    ResponseEntity<Planta> cadastrarPlanta(@RequestBody @Valid Planta planta) {
-        return new ResponseEntity<>(plantaService.cadastrarPlanta(planta), HttpStatus.CREATED);
+    ResponseEntity<Planta> cadastrarPlanta(@RequestBody @Valid Planta planta, long userId) {
+        return new ResponseEntity<>(plantaService.cadastrarPlanta(planta, userId), HttpStatus.CREATED);
     }
 
     @PutMapping
-    ResponseEntity<Planta> editarPlanta(@RequestBody @Valid Planta plantaEditada) {
-        return new ResponseEntity<>(plantaService.editarPlanta(plantaEditada), HttpStatus.OK);
+    ResponseEntity<Planta> editarPlanta(@RequestBody @Valid Planta plantaEditada, long userId) {
+        return new ResponseEntity<>(plantaService.editarPlanta(plantaEditada, userId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{plantaId}")
-    ResponseEntity<Planta> excluirPlanta(@PathVariable long plantaId) {
-        plantaService.excluirPlanta(plantaId);
+    ResponseEntity<Planta> excluirPlanta(@PathVariable long plantaId, long userId) {
+        plantaService.excluirPlanta(plantaId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

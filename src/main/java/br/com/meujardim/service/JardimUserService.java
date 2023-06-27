@@ -53,6 +53,13 @@ public class JardimUserService {
         }
     }
 
+    public boolean verificaSerAdmin(long userId) {
+        Optional<JardimUser> procuraUser = userRepository.findById(userId);
+        if (procuraUser.isEmpty()) {
+            throw new UserNotFoundException("Usuário não encontrado.");
+        } else return procuraUser.get().getIsAdmin();
+    }
+
     @Transactional
     public JardimUser atualizaUser(JardimUser userAtualizado) {
         Optional<JardimUser> userBuscado = userRepository.findById(userAtualizado.getUserId());

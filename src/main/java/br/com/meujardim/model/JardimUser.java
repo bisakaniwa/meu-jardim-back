@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Getter
@@ -31,6 +32,7 @@ public class JardimUser {
     @NotBlank
     private String senha;
 
+    @Value("0")
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
@@ -64,7 +66,7 @@ public class JardimUser {
         this.senha = senha;
     }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
